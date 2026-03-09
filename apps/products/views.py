@@ -39,3 +39,11 @@ def cart_view(request):
     }
     return render(request, "products/cart.html", context)
 
+def remove_from_cart(request, id):
+    cart = request.session.get("cart", [])
+
+    if id in cart:
+        cart.remove(id)
+
+    request.session["cart"] = cart
+    return redirect("cart")
