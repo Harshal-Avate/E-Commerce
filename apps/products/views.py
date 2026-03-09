@@ -11,13 +11,16 @@ def product_list(request):
     return render(request, "products/product_list.html", context)
 
 def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
-    return render(request, 'products/product_detail.html', {'product': product})
+    products = Product.objects.get.get_object_or_404(Product, id=id)
+    context = {
+        "product": products
+    }
+    return render(request, 'products/product_detail.html', {'product': products})
 
 def add_to_cart(request, id):
-    cart = request.sesson.get('cart', [])
+    cart = request.session.get('cart', [])
     cart.append(id)
-    request.sesson['cart'] = cart
+    request.session['cart'] = cart
     return redirect('product_list')
 
 def cart_view(request):
@@ -27,7 +30,7 @@ def cart_view(request):
 
 def cart_view(request):
     cart = request.session.get("cart", []) #This gets the cart from the session.
-    products = Product.objects.filter(id_in=cart)
+    products = Product.objects.filter(id__in=cart)
     context = {
         "products": products
     }
