@@ -2,7 +2,22 @@
 
 {% for product in products %}
 
-<h2>{{ product.name }}</h2>
-<p>Price: {{ product.price }}</p>
+<div>
+
+    <h2>{{ product.name }}</h2>
+
+    <p>Price: ₹{{ product.price }}</p>
+
+    {% if product.image %}
+    <img src="{{ product.image.url }}" width="150">
+    {% endif %}
+
+</div>
+
+<hr>
+
+{% empty %}
+
+<p>Your cart is empty</p>
 
 {% endfor %}

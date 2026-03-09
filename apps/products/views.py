@@ -5,7 +5,10 @@ from .models import Product
 
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'products/product_list.html', {'product': products})
+    context = {
+        "products": products
+    }
+    return render(request, "products/product_list.html", context)
 
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
@@ -21,3 +24,12 @@ def cart_view(request):
     cart = request.session.get('cart', [])
     products = Product.objects.filter(id__in=cart)
     return render(request, 'products/cart.html', {'products': products})
+
+def cart_view(request):
+    cart = request.session.get("cart", []) #This gets the cart from the session.
+    products = Product.objects.filter(id_in=cart)
+    context = {
+        "products": products
+    }
+    return render(request, "products/cart.html", context)
+
