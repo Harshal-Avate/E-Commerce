@@ -5,8 +5,11 @@ from .models import Product
 
 def product_list(request):
     products = Product.objects.all()
+    cart = request.session.get("cart", [])
+    cart_count = len(cart)
     context = {
-        "products": products
+        "products": products,
+        "cart_count": cart_count
     }
     return render(request, "products/product_list.html", context)
 
