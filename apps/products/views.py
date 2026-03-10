@@ -34,8 +34,14 @@ def cart_view(request):
 def cart_view(request):
     cart = request.session.get("cart", []) #This gets the cart from the session.
     products = Product.objects.filter(id__in=cart)
+    total_price = 0
+
+    for product in products:
+        total_price += product.price 
+
     context = {
-        "products": products
+        "products": products,
+        "total_price": total_price
     }
     return render(request, "products/cart.html", context)
 
