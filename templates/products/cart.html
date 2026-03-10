@@ -1,20 +1,24 @@
+{% load cart_extras %}
+
 <h1>Your Cart</h1>
 
 {% for product in products %}
 
 <div>
 
-    <h2>{{ product.name }}</h2>
+<h2>{{ product.name }}</h2>
 
-    <p>Price: ₹{{ product.price }}</p>
+<p>Price: ₹{{ product.price }}</p>
 
-    <a href="/products/cart/remove/{{ product.id }}/">Remove</a>
+<p>Quantity: {{ cart|get_item:product.id }}</p>
 
-    {% if product.image %}
+{% if product.image %}
+<img src="{{ product.image.url }}" width="150">
+{% endif %}
 
-    <img src="{{ product.image.url }}" width="150">
+<br><br>
 
-    {% endif %}
+<a href="{% url 'remove_from_cart' product.id %}">Remove</a>
 
 </div>
 
