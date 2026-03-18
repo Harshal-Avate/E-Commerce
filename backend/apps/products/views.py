@@ -5,13 +5,13 @@ from .models import Product,Order
 
 def product_list(request):
     products = Product.objects.all()
-    cart = request.session.get("cart", [])
+    cart = request.session.get('cart', {})
     cart_count = sum(cart.values())
-    context = {
-        "products": products,
-        "cart_count": cart_count
-    }
-    return render(request, "products/product_list.html", context)
+
+    return render(request, 'products/product_list.html', {
+        'products': products,
+        'cart_count': cart_count,
+    })
 
 def product_detail(request, id):
     products = get_object_or_404(Product, id=id)
