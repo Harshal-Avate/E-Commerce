@@ -3,13 +3,6 @@ from . import views
 
 urlpatterns = [
     path("", views.product_list, name="product_list"),
-    path("<int:id>/", views.product_detail, name="product_detail"),
-    path("cart/", views.cart_view, name="cart"),
-    path("cart/add/<int:id>/", views.add_to_cart, name="add_to_cart"),
-    path("cart/", views.cart_view, name="cart"),
-    path("cart/remove/<int:id>/", views.remove_from_cart, name="remove_from_cart"),
-    path("cart/increase/<int:id>/", views.increase_quantity, name="increase_quantity"),
-    path("cart/decrease/<int:id>/", views.decrease_quantity, name="decrease_quantity"),
-    path("<int:id>/", views.product_detail, name="product_detail"),  
-    path("checkout/", views.checkout, name="checkout"),  
+    path("product/<int:product_id>/", views.product_detail, name="product_detail"),
+    path("antigravity/", views.antigravity_view, name="antigravity"),
 ]
