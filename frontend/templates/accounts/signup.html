@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Join LuxMarket - Create a New Account{% endblock %}
+
+{% block content %}
+<section class="container mt-5 mb-5 pt-5">
+    <div class="row g-5 justify-content-center">
+        <div class="col-md-5">
+            <div class="card glass shadow-lg border-0 overflow-hidden rounded-4 p-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-3 gradient-text">Join LuxMarket</h2>
+                    <p class="text-secondary mb-0">Experience the world's premium e-commerce platform.</p>
+                </div>
+
+                <form action="{% url 'signup' %}" method="post" id="register-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-secondary">Username</label>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-user-circle"></i></span>
+                            <input type="text" name="username" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Choose a username" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-secondary">Email</label>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Email Address" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-secondary">Password</label>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-lock"></i></span>
+                            <input type="password" name="password" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Create a password" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-semibold small text-secondary">Confirm Password</label>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-check-double"></i></span>
+                            <input type="password" name="confirm_password" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Confirm your password" required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold fs-5 shadow-lg">
+                            Sign Up <i class="fas fa-user-plus ms-2"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <p class="text-secondary mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary text-decoration-none fw-bold">Login Here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

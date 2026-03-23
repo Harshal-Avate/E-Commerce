@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - LuxMarket Detail{% endblock %}
+
+{% block content %}
+    <nav class="container mt-4 mb-5 px-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}?category={{ product.category.slug }}" class="text-decoration-none">{{ product.category.name|default:"General" }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <section class="container mb-5">
+        <div class="row g-4">
+            <!-- 1. Product Image Section (Left) -->
+            <div class="col-md-12 col-lg-5">
+                <div class="row g-2">
+                    <!-- Thumbnail Sidebar -->
+                    <div class="col-2 d-none d-md-flex flex-column gap-2 overflow-auto" style="max-height: 500px;">
+                        {% if product.image %}
+                            <div class="thumbnail-item border rounded-1 p-1 cursor-pointer active-thumb" onclick="switchMedia('image', '{{ product.image.url }}', this)" style="background: rgba(250,250,247,0.4);">
+                                <img src="{{ product.image.url }}" class="img-fluid rounded-1" alt="Main" style="mix-blend-mode: multiply;">
+                            </div>
+                        {% endif %}
+                        {% for img in product.images.all %}
+                            <div class="thumbnail-item border rounded-1 p-1 cursor-pointer" onclick="switchMedia('image', '{{ img.image.url }}', this)" style="background: rgba(250,250,247,0.4);">
+                                <img src="{{ img.image.url }}" class="img-fluid rounded-1" alt="Gallery" style="mix-blend-mode: multiply;">
+                            </div>
+                        {% endfor %}
+                        {% if product.video %}
+                            <div class="thumbnail-item border rounded-1 p-1 cursor-pointer position-relative" onclick="switchMedia('video', '{{ product.video.url }}', this)">
+                                <div class="ratio ratio-1x1 bg-dark rounded-1 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-play-circle text-white fs-5"></i>
+                                </div>
+                                <span class="position-absolute bottom-0 start-50 translate-middle-x badge bg-dark opacity-75 small p-0 mb-1" style="font-size: 0.5rem;">VIDEO</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Main Viewer -->
+                    <div class="col-10 viewer-container">
+                        <div class="product-card d-flex align-items-center justify-content-center position-relative h-100" style="min-height: 400px; padding: 2rem;" id="mediaViewer">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="img-fluid main-media-content" style="max-height: 500px; object-fit: contain; mix-blend-mode: multiply;" alt="{{ product.name }}" id="mainProductMedia">
+                            {% else %}
+                                <div class="text-center">
+                                    <i class="fas fa-image text-muted fs-1 opacity-25"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Thumbnails -->
+                <div class="col-12 d-md-none mt-3">
+                    <div class="d-flex gap-2 overflow-auto pb-2">
+                        {% if product.image %}
+                            <div class="thumbnail-item border rounded-1 p-1 cursor-pointer active-thumb" style="width: 60px; flex-shrink: 0; background: rgba(250,250,247,0.4);" onclick="switchMedia('image', '{{ product.image.url }}', this)">
+                                <img src="{{ product.image.url }}" class="img-fluid rounded-1" alt="Main" style="mix-blend-mode: multiply;">
+                            </div>
+                        {% endif %}
+                        {% for img in product.images.all %}
+                            <div class="thumbnail-item border rounded-1 p-1 cursor-pointer" style="width: 60px; flex-shrink: 0; background: rgba(250,250,247,0.4);" onclick="switchMedia('image', '{{ img.image.url }}', this)">
+                                <img src="{{ img.image.url }}" class="img-fluid rounded-1" alt="Gallery" style="mix-blend-mode: multiply;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Product Info Section (Center) -->
+            <div class="col-md-6 col-lg-4">
+                <div class="product-header mb-3">
+                    <h1 class="fs-4 fw-normal mb-1">{{ product.name }}</h1>
+                    {% if product.category %}
+                        <a href="{% url 'product_list' %}?category={{ product.category.slug }}" class="text-decoration-none small pb-2 d-inline-block">Visit the {{ product.category.name }} Store</a>
+                    {% else %}
+                        <a href="#" class="text-decoration-none small pb-2 d-inline-block">Visit the Store</a>
+                    {% endif %}
+                    
+                    <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
+                        <div class="text-warning small">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <a href="#" class="text-decoration-none small">124 ratings</a>
+                    </div>
+
+                    <div class="price-section mb-3">
+                        <div class="d-flex align-items-baseline gap-2 mb-1">
+                            <span class="fs-4 fw-light text-danger">-35%</span>
+                            <span class="fs-2 fw-semibold">₹{{ product.price }}</span>
+                        </div>
+                        <div class="small text-muted mb-1">
+                            M.R.P.: <span class="text-decoration-line-through">₹{{ product.price|add:"1000" }}</span>
+                        </div>
+                        <div class="small fw-semibold">Inclusive of all taxes</div>
+                    </div>
+
+                    <div class="description mb-4 border-top pt-3">
+                        <h5 class="fw-bold fs-6 mb-2">About this item</h5>
+                        <ul class="text-secondary small mb-0 ps-3">
+                            <li>{{ product.description }}</li>
+                            <li>Premium quality materials ensuring durability.</li>
+                            <li>Designed for maximum comfort and style.</li>
+                            <li>100% genuine product with brand warranty.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Buy Box Section (Right) -->
+            <div class="col-md-6 col-lg-3">
+                <div class="product-card p-4">
+                    <h5 class="fw-bold mb-3">₹{{ product.price }}</h5>
+                    
+                    <div class="small mb-3 text-secondary">
+                        <i class="fas fa-map-marker-alt me-1"></i> Delivering to user - Update location
+                    </div>
+                    
+                    {% if product.stock > 0 %}
+                        <div class="fs-5 text-success fw-bold mb-3">In stock</div>
+                    {% else %}
+                        <div class="fs-5 text-danger fw-bold mb-3">Out of stock</div>
+                    {% endif %}
+
+                    <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <div class="mb-3 d-flex align-items-center">
+                            <label class="fw-bold me-2 mb-0" style="font-size: 0.9rem;">Quantity:</label>
+                            <div class="input-group input-group-sm mb-0 rounded border overflow-hidden" style="width: 100px;">
+                                <button class="btn btn-light border-0 border-end border-secondary px-2 border-opacity-25" type="button" onclick="decrementValue()"><i class="fas fa-minus small"></i></button>
+                                <input type="number" name="quantity" id="quantity" class="form-control text-center border-0 p-1 custom-quant-input fw-bold" value="1" min="1" max="{{ product.stock }}">
+                                <button class="btn btn-light border-0 border-start border-secondary px-2 border-opacity-25" type="button" onclick="incrementValue()"><i class="fas fa-plus small"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2 mb-2">
+                            <button type="submit" class="btn rounded-pill py-1 w-100 shadow-sm" style="background-color: #ffd814; color: #0f1111; border: 1px solid #fcd200; font-size: 0.95rem; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f7ca00'" onmouseout="this.style.backgroundColor='#ffd814'" formaction="{% url 'add_to_cart' product.id %}" {% if product.stock <= 0 %}disabled{% endif %}>
+                                Add to cart
+                            </button>
+                            <button type="submit" class="btn rounded-pill py-1 w-100 shadow-sm" style="background-color: #ffa41c; color: #0f1111; border: 1px solid #ff8f00; font-size: 0.95rem; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#fa8900'" onmouseout="this.style.backgroundColor='#ffa41c'" formaction="{% url 'buy_now' product.id %}" {% if product.stock <= 0 %}disabled{% endif %}>
+                                Buy Now
+                            </button>
+                        </div>
+                        
+                        <div class="form-check mb-3 mt-2">
+                            <input class="form-check-input mt-1 shadow-none" type="checkbox" value="" id="giftOption">
+                            <label class="form-check-label text-dark" for="giftOption" style="font-size: 0.85rem;">
+                                Add gift options
+                            </label>
+                        </div>
+                    </form>
+
+                    <table class="table table-borderless table-sm mb-3" style="font-size: 0.85rem;">
+                        <tbody>
+                            <tr>
+                                <td class="text-secondary ps-0 py-1">Ships from</td>
+                                <td class="py-1">LuxMarket</td>
+                            </tr>
+                            <tr>
+                                <td class="text-secondary ps-0 py-1">Sold by</td>
+                                <td class="py-1">Premium Retailer</td>
+                            </tr>
+                            <tr>
+                                <td class="text-secondary ps-0 py-1">Payment</td>
+                                <td class="py-1 text-primary">Secure transaction</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .thumbnail-item {
+            transition: all 0.2s ease;
+            border: 2px solid transparent !important;
+        }
+        .active-thumb {
+            border-color: var(--bs-primary) !important;
+            opacity: 1 !important;
+        }
+        .thumbnail-item:hover {
+            opacity: 1 !important;
+        }
+        .object-fit-cover {
+            object-fit: cover;
+        }
+        .custom-quant-input::-webkit-outer-spin-button,
+        .custom-quant-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .custom-quant-input[type=number] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+    </style>
+
+    <script>
+        function switchMedia(type, url, element) {
+            const viewer = document.getElementById('mediaViewer');
+            
+            // Remove active class from all thumbnails
+            document.querySelectorAll('.thumbnail-item').forEach(item => {
+                item.classList.remove('active-thumb');
+            });
+            
+            // Add active class to clicked thumbnail
+            element.classList.add('active-thumb');
+
+            if (type === 'image') {
+                viewer.innerHTML = `<img src="${url}" class="img-fluid rounded-4 transition hover-scale main-media-content" alt="Product Image" id="mainProductMedia" style="mix-blend-mode: multiply;">`;
+            } else if (type === 'video') {
+                viewer.innerHTML = `
+                    <video controls autoplay class="w-100 rounded-4 shadow-lg" style="max-height: 500px;">
+                        <source src="${url}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>`;
+            }
+        }
+
+        function incrementValue() {
+            var input = document.getElementById('quantity');
+            var value = parseInt(input.value, 10);
+            value = isNaN(value) ? 0 : value;
+            var maxStock = Number("{{ product.stock|default:99 }}");
+            if (value < maxStock) {
+                value++;
+                input.value = value;
+            }
+        }
+        function decrementValue() {
+            var input = document.getElementById('quantity');
+            var value = parseInt(input.value, 10);
+            value = isNaN(value) ? 0 : value;
+            if (value > 1) {
+                value--;
+                input.value = value;
+            }
+        }
+    </script>
+{% endblock %}

@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
 
     "apps.products",
     "apps.cart",
@@ -42,6 +43,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.products.context_processors.categories_processor",
+                "apps.products.context_processors.cart_processor",
             ],
         },
     },
@@ -62,6 +65,8 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 USE_TZ = True
+USE_THOUSAND_SEPARATOR = True
+FORMAT_MODULE_PATH = ["core.formats"]
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR.parent / "static"]

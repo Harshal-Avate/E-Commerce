@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login to LuxMarket{% endblock %}
+
+{% block content %}
+<section class="container mt-5 mb-5 pt-5">
+    <div class="row g-5 justify-content-center">
+        <div class="col-md-5">
+            <div class="card glass shadow-lg border-0 overflow-hidden rounded-4 p-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-3 gradient-text">Welcome Back</h2>
+                    <p class="text-secondary mb-0">Discover something new today</p>
+                </div>
+
+                <form action="{% url 'login' %}" method="post" id="login-form">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-secondary">Username</label>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-user-circle"></i></span>
+                            <input type="text" name="username" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Enter your username" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label fw-semibold small text-secondary">Password</label>
+                            <a href="#" class="small text-primary text-decoration-none fw-bold">Forgot password?</a>
+                        </div>
+                        <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                            <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-lock text-muted"></i></span>
+                            <input type="password" name="password" class="form-control border-0 p-3 fs-6 h-auto" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold fs-5 shadow-lg">
+                            Log In <i class="fas fa-sign-in-alt ms-2"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <p class="text-secondary mb-0">Don't have an account? <a href="{% url 'signup' %}" class="text-primary text-decoration-none fw-bold">Sign Up Now</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

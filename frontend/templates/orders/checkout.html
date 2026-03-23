@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - LuxMarket Secure Payment{% endblock %}
+
+{% block content %}
+<section class="container mt-5 mb-5 pt-3">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <h2 class="fw-bold mb-4">Confirm Checkout</h2>
+            
+            <form action="{% url 'checkout' %}" method="post" id="checkout-form">
+                {% csrf_token %}
+                
+                <div class="card glass border-0 shadow-lg p-4 mb-4">
+                    <h5 class="fw-bold mb-4"><i class="fas fa-truck text-primary me-2"></i> Shipping Address</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small text-secondary">Full Name</label>
+                            <input type="text" name="full_name" class="form-control rounded-3" placeholder="First and Last Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small text-secondary">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control rounded-3" placeholder="+91 1234567890" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small text-secondary">Address Line 1</label>
+                            <input type="text" name="address" class="form-control rounded-3" placeholder="Pigeon Forge, 123 Main St" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label fw-semibold small text-secondary">City</label>
+                            <input type="text" name="city" class="form-control rounded-3" placeholder="City" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small text-secondary">State</label>
+                            <select name="state" class="form-select rounded-3" required>
+                                <option value="" disabled selected>Choose...</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Gujarat">Gujarat</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small text-secondary">Pincode</label>
+                            <input type="text" name="pincode" class="form-control rounded-3" placeholder="123456" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card glass border-0 shadow-lg p-4 mb-4">
+                    <h5 class="fw-bold mb-4"><i class="fas fa-credit-card text-primary me-2"></i> Payment Selection</h5>
+                    <div class="payment-options d-flex flex-column gap-3 mb-4">
+                        <div class="form-check p-4 border rounded-4 cursor-pointer align-items-center d-flex gap-3 position-relative transition {% if true %}checked-border{% endif %}">
+                            <input class="form-check-input ms-0" type="radio" name="payment_method" id="pay_cod" value="COD" checked>
+                            <label class="form-check-label d-flex align-items-center gap-4 w-100 stretched-link" for="pay_cod">
+                                <div class="p-2 bg-light rounded-3 text-secondary"><i class="fas fa-hand-holding-dollar fs-4"></i></div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Cash on Delivery (COD)</h6>
+                                    <p class="small text-secondary mb-0">Pay upon delivery using cash or UPI.</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-check p-4 border rounded-4 opacity-50 cursor-not-allowed align-items-center d-flex gap-3 position-relative transition">
+                            <input class="form-check-input ms-0" type="radio" name="payment_method" id="pay_online" value="ONLINE" disabled>
+                            <label class="form-check-label d-flex align-items-center gap-4 w-100 stretched-link" for="pay_online">
+                                <div class="p-2 bg-light rounded-3 text-secondary"><i class="fas fa-bank fs-4"></i></div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Digital Payments (Razorpay)</h6>
+                                    <p class="small text-secondary mb-0">Securely pay with Cards, UPI, or Netbanking (Coming Soon).</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border-0 d-flex gap-3 small text-secondary p-4 rounded-4 mb-0">
+                        <i class="fas fa-info-circle text-primary mt-1"></i>
+                        <span>By placing this order, you agree to our Terms of Use and Privacy Policy. All premium products include a 1-year limited warranty.</span>
+                    </div>
+                </div>
+
+                <div class="d-grid mt-5">
+                    <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold fs-4 shadow-lg border-0 btn-lg">
+                        Place Your Order <i class="fas fa-lock ms-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar Summary -->
+        <div class="col-lg-5">
+            <div class="card glass border-0 shadow-lg p-4 sticky-top" style="top: 100px;">
+                <h4 class="fw-bold mb-4">Order Summary</h4>
+                
+                <div class="overflow-auto pe-1 mb-4" style="max-height: 350px;">
+                    {% for item in cart_items %}
+                        <div class="d-flex gap-4 mb-4 pb-4 border-bottom last-border-0">
+                            <div class="bg-light rounded-4 overflow-hidden shadow-sm" style="width: 80px; height: 80px; flex-shrink: 0;">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" class="img-fluid" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <div class="h-100 w-100 d-flex align-items-center justify-content-center text-muted opacity-25"><i class="fas fa-image"></i></div>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">{{ item.product.name }}</h6>
+                                <p class="small text-secondary mb-2">Quantity: {{ item.quantity }}</p>
+                                <div class="d-flex justify-content-between align-items-baseline">
+                                    <span class="fw-bold text-dark">₹{{ item.subtotal }}</span>
+                                    <span class="small text-secondary fw-normal">₹{{ item.product.price }} each</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between mb-3 text-secondary">
+                        <span>Items Total</span>
+                        <span class="fw-bold text-dark">₹{{ cart_total }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between mb-3 text-secondary">
+                        <span>Delivery Charges</span>
+                        <span class="text-success badge bg-success bg-opacity-10 py-1 border-0 fw-bold">FREE</span>
+                    </li>
+                    <li class="d-flex justify-content-between mb-4 border-top pt-4">
+                        <h5 class="fw-bold mb-0">Payable Amount</h5>
+                        <h5 class="fw-bold mb-0 text-primary fs-3">₹{{ cart_total }}</h5>
+                    </li>
+                </ul>
+
+                <p class="text-center text-secondary small mb-0 mt-5"><i class="fas fa-shield-halved me-2"></i>Secure end-to-end encrypted checkout</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .cursor-not-allowed { cursor: not-allowed; }
+    .last-border-0:last-child { border-bottom: 0 !important; }
+    .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+</style>
+{% endblock %}

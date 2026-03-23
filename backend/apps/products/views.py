@@ -1,21 +1,24 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from django.db.models import Q
+from .models import Product, Category
 
 
 def product_list(request):
     query = request.GET.get("q")
-    if query:
-        products = Product.objects.filter(name__icontains=query) | Product.objects.filter(description__icontains=query)
-    else:
-        products = Product.objects.all()
+    category_slug = request.GET.get("category")
+    
+    products = Product.objects.all()
 
-    cart = request.session.get("cart", {})
-    cart_count = sum(cart.values())
+    if query:
+        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
+    
+    if category_slug:
+        products = products.filter(category__slug=category_slug)
 
     return render(request, "products/product_list.html", {
         "products": products,
-        "cart_count": cart_count,
         "query": query,
+        "selected_category": category_slug,
     })
 
 

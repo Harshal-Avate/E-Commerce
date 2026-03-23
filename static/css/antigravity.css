@@ -1,0 +1,164 @@
+:root {
+    --space-bg: #020617; /* Even deeper space */
+    --pro-blue: #3b82f6;
+    --pro-slate: #94a3b8;
+    --pro-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glow-soft: 0 0 30px rgba(59, 130, 246, 0.1);
+    --levitate-gap: 32px;
+}
+
+body, html, .bg-space {
+    background-color: var(--space-bg) !important;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(148, 163, 184, 0.02) 0%, transparent 40%) !important;
+    color: #f8fafc !important;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Background Stars - Refined */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--duration) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 0.8; transform: scale(1); }
+}
+
+/* Professional Glass Cards */
+.antigravity-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--pro-border);
+    border-radius: 32px;
+    padding: 4rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: bob 8s infinite ease-in-out;
+    position: relative;
+}
+
+.antigravity-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    transform: translateY(-20px);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.05);
+}
+
+/* Levitating Buttons - Professional Style */
+.levitate-btn, .footer-levitate-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+    padding: 0.85rem 2.2rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.levitate-btn:hover, .footer-levitate-btn:hover {
+    background: white;
+    color: var(--space-bg) !important;
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+}
+
+.button-group, .footer-btn-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+}
+
+/* Typography Enhancements */
+h1 {
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.6) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #f1f5f9;
+}
+
+.text-secondary {
+    color: var(--pro-slate) !important;
+    font-size: 1.05rem;
+}
+
+.code-snippet {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--pro-blue);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    margin: 2rem 0;
+}
+
+/* Footer Refined */
+.antigravity-footer {
+    background: rgba(2, 6, 23, 0.95);
+    border-top: 1px solid var(--pro-border);
+    padding: 5rem 0 !important;
+    margin-top: 5rem !important;
+}
+
+.footer-heading {
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Animations Staggered */
+.stagger-1 { animation-delay: 0s; }
+.stagger-2 { animation-delay: 0.8s; }
+.stagger-3 { animation-delay: 1.6s; }
+.stagger-4 { animation-delay: 2.4s; }
+
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-25px); }
+}
+
+/* Space Utility */
+.section-padding { padding: 10rem 0; }
+.card-margin { margin-bottom: 5rem; }

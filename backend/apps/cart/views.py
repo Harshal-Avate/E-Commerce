@@ -44,14 +44,29 @@ def add_to_cart(request, product_id):
 
     cart = request.session.get("cart", {})
     product_id = str(product_id)
+    
+    # Try to get quantity from POST, default to 1
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except ValueError:
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
 
     if product_id in cart:
-        if cart[product_id] < product.stock:
-            cart[product_id] += 1
+        new_quantity = cart[product_id] + quantity
+        if new_quantity <= product.stock:
+            cart[product_id] = new_quantity
         else:
-            messages.warning(request, "You cannot add more than available stock.")
+            cart[product_id] = product.stock
+            messages.warning(request, f"You cannot add more than {product.stock} available stock.")
     else:
-        cart[product_id] = 1
+        if quantity <= product.stock:
+            cart[product_id] = quantity
+        else:
+            cart[product_id] = product.stock
+            messages.warning(request, f"Added maximum available stock ({product.stock}).")
 
     request.session["cart"] = cart
     request.session.modified = True
@@ -111,10 +126,23 @@ def buy_now(request, product_id):
     cart = request.session.get("cart", {})
     product_id = str(product_id)
 
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except ValueError:
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
+    elif quantity > product.stock:
+        quantity = product.stock
+
     # In Amazon's buy now, it doesn't necessarily replace the cart, 
     # but for this simple implementation we just add it and go to checkout.
-    if product_id not in cart:
-        cart[product_id] = 1
+    if product_id in cart:
+        new_quantity = cart[product_id] + quantity
+        cart[product_id] = min(new_quantity, product.stock)
+    else:
+        cart[product_id] = quantity
     
     request.session["cart"] = cart
     request.session.modified = True

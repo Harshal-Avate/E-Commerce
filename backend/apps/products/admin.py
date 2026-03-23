@@ -1,7 +1,15 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
-from .models import Product, ProductImage
+from .models import Category, Product, ProductImage
+
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name",)
 
 
 class ProductImageInline(admin.TabularInline):
@@ -11,9 +19,9 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "price", "stock", "created_at", "edit_button")
+    list_display = ("id", "name", "category", "price", "stock", "created_at", "edit_button")
     search_fields = ("name", "description")
-    list_filter = ("created_at",)
+    list_filter = ("category", "created_at")
     list_display_links = ("id", "name")
     inlines = [ProductImageInline]
 

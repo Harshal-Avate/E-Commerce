@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Orders - LuxMarket{% endblock %}
+
+{% block content %}
+<section class="container mt-5 mb-5 pt-4">
+    <div class="row g-5">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-3">
+            <div class="card glass shadow-lg border-0 rounded-4 overflow-hidden mb-4 sticky-top" style="top: 100px;">
+                <div class="card-header bg-primary text-white border-0 py-4 text-center">
+                    <div class="p-2 border rounded-circle d-inline-block bg-white text-primary mb-3 shadow-sm" style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-circle fs-1 pt-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-white">{{ user.username }}</h5>
+                    <p class="small mb-0 opacity-75">Member since 2026</p>
+                </div>
+                <div class="list-group list-group-flush border-0">
+                    <a href="{% url 'order_list' %}" class="list-group-item list-group-item-action border-0 py-3 active">
+                        <i class="fas fa-shopping-bag me-3"></i> My Orders
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 py-3">
+                        <i class="fas fa-heart me-3"></i> Wishlist (0)
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 py-3">
+                        <i class="fas fa-gear me-3"></i> Account Settings
+                    </a>
+                    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action border-0 py-3 text-danger">
+                        <i class="fas fa-sign-out-alt me-3"></i> Logout Account
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order List -->
+        <div class="col-lg-9">
+            <h2 class="fw-bold mb-4">My Orders</h2>
+            
+            {% if orders %}
+                {% for order in orders %}
+                    <div class="card glass border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                        <div class="card-header bg-light border-0 py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            <div class="d-flex flex-wrap gap-4">
+                                <div class="order-info">
+                                    <span class="small text-secondary fw-bold text-uppercase d-block mb-1">Order Placed</span>
+                                    <span class="fw-bold text-dark">{{ order.created_at|date:"F d, Y" }}</span>
+                                </div>
+                                <div class="order-info">
+                                    <span class="small text-secondary fw-bold text-uppercase d-block mb-1">Total Price</span>
+                                    <span class="fw-bold text-dark">₹{{ order.total_price }}</span>
+                                </div>
+                                <div class="order-info">
+                                    <span class="small text-secondary fw-bold text-uppercase d-block mb-1">Order ID</span>
+                                    <span class="fw-bold text-dark text-uppercase">#{{ order.id }}</span>
+                                </div>
+                            </div>
+                            <div class="status-info">
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill px-3 py-2 fw-bold">
+                                    <i class="fas fa-truck me-2"></i> {{ order.status|default:"Processing" }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            {% for item in order.items.all %}
+                                <div class="d-flex gap-4 mb-4 pb-4 border-bottom last-border-0">
+                                    <div class="bg-light rounded-3 overflow-hidden" style="width: 80px; height: 80px; flex-shrink: 0;">
+                                        {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}" class="img-fluid" alt="{{ item.product.name }}">
+                                        {% else %}
+                                            <i class="fas fa-image fs-1 text-muted opacity-25 d-flex align-items-center justify-content-center h-100"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-1">{{ item.product.name }}</h6>
+                                        <p class="small text-secondary mb-2">Quantity: {{ item.quantity }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="fw-bold text-primary">₹{{ item.price }}</span>
+                                            <a href="{% url 'product_detail' item.product.id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold">Buy it again</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="d-flex justify-content-end gap-3 mt-4">
+                                <a href="#" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Track Package</a>
+                                <button class="btn btn-light rounded-pill px-4 fw-bold border">Invoice</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 bg-white glass border rounded-4 shadow-sm mb-5 p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-box-open text-light-emphasis display-1 opacity-25"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3">No orders yet</h3>
+                    <p class="text-secondary mb-5">You haven't placed any orders yet. Start shopping our premium collection today.</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-primary rounded-pill px-5 py-3 fs-5 fw-bold shadow-lg">Start Shopping Now</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .order-info span { font-size: 0.85rem; }
+    .last-border-0:last-child { border-bottom: 0 !important; }
+</style>
+{% endblock %}
